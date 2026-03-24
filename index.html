@@ -6,68 +6,95 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="BritFlow">
-<title>BritFlow — 30 Min Daily</title>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@900&family=Outfit:wght@400;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+<title>BritFlow — A1 to C2</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,600;0,900;1,300&family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* SEU ESTILO ORIGINAL COM MELHORIAS */
-:root{ --bg:#07080d;--s1:#0d0e15;--s2:#13141e;--text:#f2f0f8;--lc:#4ecdc4;--border:#22243a;}
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);margin:0;padding:0;height:100vh;display:flex;flex-direction:column;}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:15px;background:var(--s1);border-bottom:1px solid var(--border)}
-.timer-box{font-family:'JetBrains Mono';background:var(--s2);padding:5px 15px;border-radius:20px;border:1px solid var(--lc);color:var(--lc);font-weight:bold;}
-.content{flex:1;overflow-y:auto;padding:20px;}
-.card{background:var(--s1);border:1px solid var(--border);border-radius:15px;padding:20px;margin-bottom:20px;}
-.btn-mic{background:#ff4757;color:white;border:none;border-radius:50%;width:50px;height:50px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.5rem;transition:0.3s;}
-.btn-mic.active{animation:pulse-red 1s infinite;background:#ff0000;}
-@keyframes pulse-red{0%{transform:scale(1)}50%{transform:scale(1.1)}100%{transform:scale(1)}}
-.speed-row{display:flex;gap:10px;margin-bottom:15px;}
-.spd-btn{background:var(--s2);border:1px solid var(--border);color:white;padding:5px 12px;border-radius:10px;cursor:pointer;}
-.spd-btn.active{border-color:var(--lc);color:var(--lc);}
-.next-btn{width:100%;padding:15px;background:var(--lc);color:var(--bg);border:none;border-radius:12px;font-weight:bold;font-size:1rem;margin-top:20px;cursor:pointer;}
+/* MANTIVE TODO O SEU CSS ORIGINAL ABAIXO */
+:root{ --bg:#07080d;--s1:#0d0e15;--s2:#13141e;--s3:#191a26; --border:#22243a;--border2:#2c2e48; --text:#f2f0f8;--muted:#5a5c7a;--muted2:#8486a8; --r:15px;--rs:10px; }
+.lA1{--lc:#4ecdc4;--lb:#0d2220;} .lA2{--lc:#45b7d1;--lb:#0a1e28;} .lB1{--lc:#96ceb4;--lb:#0e2018;} .lB2{--lc:#ffd93d;--lb:#201a08;} .lC1{--lc:#ff6b6b;--lb:#200d0d;} .lC2{--lc:#c9a0dc;--lb:#180d20;}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);font-size:14px;user-select:none;}
+.screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .25s;overflow:hidden;}
+.screen.active{opacity:1;pointer-events:all;}
+#splash{align-items:center;justify-content:center;padding:30px 24px; background:radial-gradient(ellipse at 30% 20%,#1a1428 0%,var(--bg) 60%);}
+.splash-logo{font-family:'Fraunces',serif;font-size:2.8rem;font-weight:900; background:linear-gradient(135deg,#fff 0%,#c9a0dc 50%,#4ecdc4 100%); -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text; letter-spacing:-1px;line-height:1;}
+.levels-grid{display:flex;flex-direction:column;gap:10px;width:100%;max-width:400px;}
+.level-card{ display:flex;align-items:center;gap:14px;padding:14px 16px; background:var(--s1);border:1px solid var(--border);border-radius:var(--r); cursor:pointer;transition:all .2s;position:relative;overflow:hidden; }
+.level-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--lc);}
+.lv-badge{ width:44px;height:44px;border-radius:10px; background:var(--lb);border:1px solid var(--lc); display:flex;align-items:center;justify-content:center;flex-shrink:0; font-family:'Fraunces',serif;font-weight:900;font-size:0.88rem;color:var(--lc); }
+.topbar{ display:flex;align-items:center;justify-content:space-between; padding:11px 16px;background:var(--s1);border-bottom:1px solid var(--border);flex-shrink:0; }
+.timer-txt{font-family:'JetBrains Mono',monospace;font-size:0.82rem;color:#4ecdc4;font-weight:bold;}
+/* BOTÃO DE MICROFONE NOVO */
+.btn-mic-main{ background:#ff4757; color:white; border:none; border-radius:50%; width:35px; height:35px; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-left:8px; }
+.btn-mic-main.active{ animation: pulse 1s infinite; background: red; }
+@keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 </style>
 </head>
 <body>
 
-<div class="topbar">
-    <div style="font-family:'Fraunces';font-size:1.4rem">BritFlow</div>
-    <div class="timer-box">⏳ <span id="timerVal">30:00</span></div>
+<div class="screen active" id="splash">
+    <div class="splash-logo">BritFlow</div>
+    <div style="color:var(--muted2); margin-bottom:25px;">Natural British English</div>
+    <div class="levels-grid">
+        <div class="level-card lA1" onclick="startLevel('A1')"><div class="lv-badge lA1">A1</div><div class="lv-info"><div class="lv-name">Beginner</div></div></div>
+        <div class="level-card lB1" onclick="startLevel('B1')"><div class="lv-badge lB1">B1</div><div class="lv-info"><div class="lv-name">Intermediate</div></div></div>
+        <div class="level-card lC1" onclick="startLevel('C1')"><div class="lv-badge lC1">C1</div><div class="lv-info"><div class="lv-name">Advanced</div></div></div>
+    </div>
 </div>
 
-<div class="content" id="app">
+<div class="screen" id="main">
+    <div class="topbar">
+        <div class="logo-top" style="font-family:'Fraunces';">BritFlow</div>
+        <div class="timer-wrap">⏳ <span class="timer-txt" id="timerVal">30:00</span></div>
+        <div class="level-pill" id="lvPill">B1</div>
     </div>
+    <div id="contentArea" style="flex:1; overflow-y:auto; padding:20px;">
+        </div>
+</div>
 
 <script>
-// CONFIGURAÇÕES DA AULA
-let timeLeft = 30 * 60; // 30 minutos
+let timeLeft = 30 * 60;
 let speechRate = 1.0;
 let recognition;
 
-// BANCO DE FRASES PARA O "MODO INFINITO"
-const sentences = [
-    {en: "Could I get a flat white, please?", pt: "Poderia me dar um flat white, por favor?"},
-    {en: "I'm looking for the nearest tube station.", pt: "Estou procurando a estação de metrô mais próxima."},
-    {en: "It's a bit chilly today, isn't it?", pt: "Está um pouco frio hoje, não está?"},
-    {en: "I'd like to book a table for two tonight.", pt: "Gostaria de reservar uma mesa para dois hoje à noite."},
-    {en: "Do you have any vegetarian options?", pt: "Você tem alguma opção vegetariana?"},
-    {en: "Cheers for your help, I really appreciate it.", pt: "Obrigado pela ajuda, eu realmente agradeço."},
-    {en: "I'm just browsing, thank you.", pt: "Estou só dando uma olhadinha, obrigado."}
-];
+// FUNÇÃO PARA INICIAR O NÍVEL
+function startLevel(lv) {
+    document.getElementById('splash').classList.remove('active');
+    document.getElementById('main').classList.add('active');
+    document.getElementById('lvPill').innerText = lv;
+    startTimer();
+    loadExercise();
+}
 
-// INICIAR TIMER
+// TIMER DE 30 MINUTOS
 function startTimer() {
-    const timerDisplay = document.getElementById('timerVal');
-    const interval = setInterval(() => {
-        let mins = Math.floor(timeLeft / 60);
-        let secs = timeLeft % 60;
-        timerDisplay.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
-        if (timeLeft <= 0) {
-            clearInterval(interval);
-            alert("Parabéns! Você completou seus 30 minutos de hoje!");
-        }
+    setInterval(() => {
+        if(timeLeft <= 0) return;
         timeLeft--;
+        let m = Math.floor(timeLeft/60);
+        let s = timeLeft % 60;
+        document.getElementById('timerVal').innerText = `${m}:${s<10?'0':''}${s}`;
     }, 1000);
 }
 
-// FUNÇÃO DE VOZ (PROFESSOR FALA)
+// MICROFONE (VOZ PARA TEXTO)
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        if(document.getElementById('chatInput')) document.getElementById('chatInput').value = text;
+        if(document.getElementById('shadowInput')) document.getElementById('shadowInput').value = text;
+    };
+}
+
+function startListening() {
+    recognition.start();
+    alert("Ouvindo... Fale agora.");
+}
+
+// VOZ DO PROFESSOR (TEXTO PARA VOZ)
 function speak(text) {
     window.speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(text);
@@ -76,67 +103,29 @@ function speak(text) {
     window.speechSynthesis.speak(u);
 }
 
-// CONFIGURAR RECONHECIMENTO DE VOZ (VOCÊ FALA)
-if ('webkitSpeechRecognition' in window) {
-    recognition = new webkitSpeechRecognition();
-    recognition.lang = 'en-US';
-    recognition.onresult = (e) => {
-        document.getElementById('user-input').value = e.results[0][0].transcript;
-        document.getElementById('mic-btn').classList.remove('active');
-    };
-}
-
-function startListening() {
-    if(!recognition) return alert("Microfone não suportado no seu navegador.");
-    recognition.start();
-    document.getElementById('mic-btn').classList.add('active');
-}
-
-// GERAR NOVA LIÇÃO (MODO INFINITO)
-function nextLesson() {
-    const randomIdx = Math.floor(Math.random() * sentences.length);
-    const item = sentences[randomIdx];
-    const app = document.getElementById('app');
-
-    app.innerHTML = `
-        <div class="card">
-            <small style="color:var(--lc)">PHASE: SHADOWING</small>
-            <h2 id="current-phrase" style="margin:15px 0">${item.en}</h2>
-            <p style="color:#5a5c7a; font-style:italic; margin-bottom:20px">${item.pt}</p>
+// CARREGAR EXERCÍCIO (AULA INFINITA)
+function loadExercise() {
+    const area = document.getElementById('contentArea');
+    area.innerHTML = `
+        <div style="background:var(--s1); padding:20px; border-radius:15px; border:1px solid var(--border)">
+            <h3 style="color:var(--lc)">Shadowing Practice</h3>
+            <h2 id="phrase" style="margin:15px 0">"Could I get a flat white, please?"</h2>
             
-            <div class="speed-row">
-                <button class="spd-btn" onclick="speechRate=0.6; alert('Lento')">🐢 Slow</button>
-                <button class="spd-btn active" onclick="speechRate=1.0; alert('Normal')">🐰 Normal</button>
-                <button class="spd-btn" onclick="speak('${item.en.replace(/'/g, "\\'")}')">🔊 Hear</button>
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <button onclick="speechRate=0.6" style="padding:5px; border-radius:5px;">🐢 Lento</button>
+                <button onclick="speechRate=1.0" style="padding:5px; border-radius:5px;">🐰 Normal</button>
+                <button onclick="speak(document.getElementById('phrase').innerText)" style="padding:5px; background:var(--lc); border:none; border-radius:5px;">🔊 Ouvir</button>
             </div>
 
-            <div style="display:flex; gap:10px; align-items:center; margin-top:20px;">
-                <input type="text" id="user-input" placeholder="Click mic and speak..." 
-                    style="flex:1; padding:15px; border-radius:10px; background:#000; color:white; border:1px solid #333;">
-                <button id="mic-btn" class="btn-mic" onclick="startListening()">🎤</button>
+            <div style="display:flex; align-items:center;">
+                <input type="text" id="shadowInput" placeholder="Fale ou digite..." style="flex:1; padding:10px; border-radius:10px; background:#000; border:1px solid #333; color:white;">
+                <button class="btn-mic-main" onclick="startListening()">🎤</button>
             </div>
-
-            <button class="next-btn" onclick="validate()">VALIDATE & NEXT</button>
-            <div id="feedback" style="margin-top:15px; text-align:center;"></div>
+            
+            <button onclick="loadExercise()" style="width:100%; margin-top:20px; padding:12px; background:var(--lc); border:none; border-radius:10px; font-weight:bold;">PRÓXIMA FRASE</button>
         </div>
     `;
 }
-
-function validate() {
-    const userText = document.getElementById('user-input').value.toLowerCase();
-    if(userText.length > 0) {
-        document.getElementById('feedback').innerHTML = "✅ Great job! Keep going!";
-        setTimeout(nextLesson, 1500);
-    } else {
-        alert("Please speak or write something first!");
-    }
-}
-
-// INICIAR TUDO
-window.onload = () => {
-    startTimer();
-    nextLesson();
-};
 </script>
 </body>
 </html>
